@@ -1,35 +1,36 @@
-# MEMORY.md — Long-term Memory
+# MEMORY.md — 长期记忆
 
-> Managed by Claw. Updated after each session when new context is learned.  
-> Last updated: 2026-05-05
+> 由 Claw 维护。每次会话结束后若有新上下文则更新。  
+> 最后更新：2026-05-05
 
 ---
 
-## Owner
+## 主人信息
 
-- **GitHub:** Jacob-biu
-- **Repo:** Jacob-biu/clawBot
-- **Primary language in repo:** Chinese (simplified), with English for code/files
+- **GitHub：** Jacob-biu
+- **仓库：** Jacob-biu/clawBot
+- **交流语言：** 中文（简体）
 
-## Preferences
+## 偏好
 
-- Prefers direct, action-oriented responses
-- Wants the AI to write things down rather than rely on conversation context
-- Values a lightweight, non-over-engineered setup
-- Interested in long-term AI workspace concept (OpenClaw-style)
+- 喜欢直接、以行动为导向的回应
+- 希望 AI 将重要信息写入文件，而非依赖对话上下文
+- 重视轻量、不过度设计的方案
+- 对长期 AI 工作空间概念（OpenClaw 风格）感兴趣
+- **要求始终使用中文交流**
 
-## Ongoing Projects
+## 进行中的项目
 
-| Project | Status | Notes |
-|---------|--------|-------|
-| AI workspace initialisation | ✅ Done | AGENTS.md, MEMORY.md, memory/ created |
+| 项目 | 状态 | 备注 |
+|------|------|------|
+| AI 工作空间初始化 | ✅ 已完成 | 已创建 AGENTS.md、MEMORY.md、memory/ 目录结构 |
 
-## Key Decisions
+## 关键决策
 
-- `AGENTS.md` is the core operating file; all other memory files are secondary
-- Memory directory uses `tasks.md` (plaintext) + `log.jsonl` (structured log)
-- No heavy tooling — plain markdown and JSONL are the primary formats
+- `AGENTS.md` 是核心操作文件，其他记忆文件为辅助
+- 记忆目录使用 `tasks.md`（纯文本）+ `log.jsonl`（结构化日志）
+- 不引入重型工具——纯 Markdown 与 JSONL 是主要格式
 
-## Notes
+## 备注
 
-_Add anything useful here across sessions._
+_在此跨会话添加任何有用信息。_

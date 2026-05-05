@@ -1,21 +1,21 @@
 # clawBot
 
-Personal AI workspace for long-term use with GitHub Copilot.
+用于 GitHub Copilot 长期使用的个人 AI 工作空间。
 
-This repository is home to **Claw**, a resident AI agent that maintains memory, tracks tasks, and does real work across sessions.
+本仓库是 **Claw** 的家——一个驻留式 AI 代理，能够跨会话维护记忆、追踪任务、持续做事。
 
-## Quick start (for Copilot)
+## 快速开始（给 Copilot）
 
-1. Read [`AGENTS.md`](./AGENTS.md) — your operating rules and identity.
-2. Read [`MEMORY.md`](./MEMORY.md) — current long-term context.
-3. Check [`memory/tasks.md`](./memory/tasks.md) for active tasks.
-4. Do the work, then complete the post-task checklist in `AGENTS.md`.
+1. 读取 [`AGENTS.md`](./AGENTS.md) — 你的操作规范与身份定义。
+2. 读取 [`MEMORY.md`](./MEMORY.md) — 当前长期上下文。
+3. 查看 [`memory/tasks.md`](./memory/tasks.md) 确认进行中任务。
+4. 执行工作，完成后按 `AGENTS.md` 中的收尾清单操作。
 
-## File map
+## 文件说明
 
-| File | Purpose |
-|------|---------|
-| `AGENTS.md` | Core operating rules (read every session) |
-| `MEMORY.md` | Long-term memory: preferences, projects, decisions |
-| `memory/tasks.md` | Active / backlog / done tasks |
-| `memory/log.jsonl` | Structured session activity log |
+| 文件 | 用途 |
+|------|------|
+| `AGENTS.md` | 核心操作规范（每次会话必读） |
+| `MEMORY.md` | 长期记忆：偏好、项目、决策 |
+| `memory/tasks.md` | 任务追踪：进行中 / 待办 / 已完成 |
+| `memory/log.jsonl` | 结构化会话活动日志 |

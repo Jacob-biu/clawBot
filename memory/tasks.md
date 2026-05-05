@@ -1,19 +1,20 @@
-# tasks.md — Task Tracker
+# tasks.md — 任务追踪
 
-> Managed by Claw. Updated at the end of every session.
+> 由 Claw 维护。每次会话结束时更新。
 
 ---
 
-## Active
+## 进行中
 
-_None currently._
+_当前无进行中任务。_
 
-## Backlog
+## 待办
 
-_None currently._
+_当前无待办任务。_
 
-## Done
+## 已完成
 
-| Date | Task | Notes |
-|------|------|-------|
-| 2026-05-05 | Initialise AI workspace | Created AGENTS.md, MEMORY.md, memory/ structure |
+| 日期 | 任务 | 备注 |
+|------|------|------|
+| 2026-05-05 | 初始化 AI 工作空间 | 已创建 AGENTS.md、MEMORY.md、memory/ 目录结构 |
+| 2026-05-05 | 将所有文件改为中文 | 响应主人要求，全面切换为中文 |

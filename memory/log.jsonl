@@ -1,0 +1,1 @@
+{"date": "2026-05-05", "session": "Workspace initialisation", "summary": "Created AGENTS.md (core rules), MEMORY.md (long-term memory), memory/tasks.md, memory/log.jsonl. Repository is now set up as a long-term personal AI workspace.", "files_changed": ["AGENTS.md", "MEMORY.md", "README.md", "memory/tasks.md", "memory/log.jsonl"]}

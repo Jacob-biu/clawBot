@@ -236,24 +236,62 @@ def filter_papers(papers: list[dict]) -> list[dict]:
 
 
 # ═══════════════════════════════════════════════════════════
-#  摘要提炼（无需外部 LLM，基于规则提取）
+#  摘要提炼 + 中文翻译
 # ═══════════════════════════════════════════════════════════
 
 def _split_sentences(text: str) -> list[str]:
     """将英文文本按句号/感叹号/问号分割为句子列表"""
-    # 简单句分割，保留原句
     parts = re.split(r'(?<=[.!?])\s+', text.strip())
     return [s.strip() for s in parts if s.strip()]
 
 
+def _translate_to_zh(text: str, retries: int = 2) -> str:
+    """
+    调用 MyMemory 免费翻译 API 将英文文本翻译为中文（简体）。
+    无需 API Key，使用 urllib 标准库即可，每次请求限制约 500 字符。
+    翻译失败时返回原英文，并附注（翻译服务暂不可用）。
+    """
+    # MyMemory 每次请求有字符限制，先截取
+    if len(text) > 450:
+        text = text[:450] + "…"
+
+    params = urllib.parse.urlencode({
+        "q":        text,
+        "langpair": "en|zh-CN",
+        "de":       "clawbot@noreply.github.com",  # 可选联系邮箱，提升配额
+    })
+    api_url = f"https://api.mymemory.translated.net/get?{params}"
+
+    for attempt in range(retries + 1):
+        try:
+            req = urllib.request.Request(
+                api_url,
+                headers={"User-Agent": "clawBot-DailyFindings/1.0"},
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+
+            # responseStatus 200 表示成功
+            if data.get("responseStatus") == 200:
+                translated = data.get("responseData", {}).get("translatedText", "").strip()
+                if translated:
+                    return translated
+
+        except Exception as exc:
+            print(f"[WARN] 翻译 API 第{attempt+1}次尝试失败：{exc}")
+
+    # 全部重试失败，回退到原文
+    return f"{text}（翻译服务暂不可用）"
+
+
 def summarize_paper(paper: dict) -> str:
     """
-    为论文生成结构化摘要概括（纯规则，无需 LLM）。
+    为论文生成中文摘要概括。
     策略：
       1. 提取摘要的前2句（通常描述问题背景与方法）
-      2. 提取最后1句（通常是实验结论）
-      3. 组合为简洁概括段落
-    返回: 英文概括字符串（保持原始语言，避免翻译偏差）
+      2. 若总句数 >= 4，追加最后1句（通常是实验结论）
+      3. 调用 MyMemory API 将提取内容翻译为中文
+    返回: 中文概括字符串
     """
     abstract = paper.get("abstract", "").strip()
     if not abstract:
@@ -261,7 +299,8 @@ def summarize_paper(paper: dict) -> str:
 
     sentences = _split_sentences(abstract)
     if not sentences:
-        return abstract[:300] + ("…" if len(abstract) > 300 else "")
+        en_text = abstract[:400] + ("…" if len(abstract) > 400 else "")
+        return _translate_to_zh(en_text)
 
     selected: list[str] = []
 
@@ -269,17 +308,14 @@ def summarize_paper(paper: dict) -> str:
     for s in sentences[:2]:
         selected.append(s)
 
-    # 若总句数 >= 4，取最后1句（结论）
+    # 若总句数 >= 4，取最后1句（结论），避免重复
     if len(sentences) >= 4 and sentences[-1] not in selected:
-        selected.append("… " + sentences[-1])
+        selected.append(sentences[-1])
 
-    summary = " ".join(selected)
+    en_summary = " ".join(selected)
 
-    # 限制长度
-    if len(summary) > 450:
-        summary = summary[:450] + " …"
-
-    return summary
+    # 翻译为中文
+    return _translate_to_zh(en_summary)
 
 
 def extract_keywords(paper: dict) -> list[str]:

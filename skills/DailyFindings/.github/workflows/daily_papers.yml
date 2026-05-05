@@ -1,0 +1,120 @@
+name: DailyFindings — 每日 Agent 论文发现
+
+# ── 触发条件 ──
+on:
+  schedule:
+    - cron: '0 0 * * *'   # UTC 00:00 = 北京时间 08:00，每天自动运行
+  workflow_dispatch:        # 支持手动触发（用于测试）
+
+# ── 权限 ──
+permissions:
+  contents: write   # 允许提交并推送 daily/ 和 README.md
+  issues: write     # 允许创建通知 Issue
+
+jobs:
+  fetch-and-notify:
+    name: 拉取论文 & 更新首页 & 发送通知
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. 检出仓库 ──
+      - name: 检出仓库
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── 2. 配置 Python ──
+      - name: 配置 Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # ── 3. 安装依赖（仅标准库，此步保留以便未来扩展）──
+      - name: 安装依赖
+        run: |
+          pip install --upgrade pip
+          [ -f requirements.txt ] && pip install -r requirements.txt || true
+
+      # ── 4. 执行论文拉取脚本 ──
+      - name: 拉取、筛选论文并更新首页
+        id: fetch
+        run: python fetch_papers.py
+
+      # ── 5. 提交并推送变更（daily/ + README.md + index.json）──
+      - name: 提交每日论文与首页更新
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name  "github-actions[bot]"
+          git add daily/ README.md index.json
+          if git diff --cached --quiet; then
+            echo "[INFO] 无新内容，跳过提交"
+          else
+            git commit -m "📚 DailyFindings 更新：$(date -u '+%Y-%m-%d') — 共 ${{ steps.fetch.outputs.paper_count }} 篇"
+            git push
+            echo "[INFO] 已推送"
+          fi
+
+      # ── 6. 确保通知 Issue 的标签存在 ──
+      - name: 确保「DailyFindings」标签存在
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const label = 'DailyFindings';
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                name:  label,
+              });
+            } catch (e) {
+              if (e.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner:       context.repo.owner,
+                  repo:        context.repo.repo,
+                  name:        label,
+                  color:       '0075ca',
+                  description: 'clawBot DailyFindings 每日论文自动通知',
+                });
+              }
+            }
+
+      # ── 7. 创建通知 Issue，@Jacob-biu ──
+      - name: 发送通知 Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const count  = '${{ steps.fetch.outputs.paper_count }}';
+            const date   = '${{ steps.fetch.outputs.date }}';
+            const noData = (!count || count === '0');
+
+            const title    = `📚 DailyFindings 每日 Agent 论文推送 — ${date}`;
+            const fileUrl  = `https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/daily/${date}.md`;
+            const readmeUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}#readme`;
+
+            const body = [
+              `@${context.repo.owner} 您好！`,
+              ``,
+              `**DailyFindings** 已完成今日（${date}）的 Agent 论文筛选与首页更新。`,
+              ``,
+              noData
+                ? `> ⚠️ 今日未找到符合条件的论文（来自顶级机构的最近36小时内 Agent 相关论文）。`
+                : [
+                    `| 指标 | 数值 |`,
+                    `|------|------|`,
+                    `| 📄 本次新增论文 | **${count} 篇** |`,
+                    `| 📋 今日详细报告 | [${date}.md](${fileUrl}) |`,
+                    `| 🏠 仓库首页（含摘要概览） | [README](${ readmeUrl}) |`,
+                  ].join('\n'),
+              ``,
+              `---`,
+              `*由 [clawBot DailyFindings](https://github.com/${context.repo.owner}/DailyFindings) skill 自动生成*`,
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner:  context.repo.owner,
+              repo:   context.repo.repo,
+              title:  title,
+              body:   body,
+              labels: ['DailyFindings'],
+            });

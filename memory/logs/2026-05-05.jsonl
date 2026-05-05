@@ -1,2 +1,3 @@
 {"date": "2026-05-05", "session": "工作空间初始化", "summary": "创建 AGENTS.md（核心规范）、MEMORY.md（长期记忆）、memory/tasks.md、memory/log.jsonl。仓库已初始化为长期个人 AI 工作空间。", "files_changed": ["AGENTS.md", "MEMORY.md", "README.md", "memory/tasks.md", "memory/log.jsonl"]}
 {"date": "2026-05-05", "session": "全面切换为中文", "summary": "响应主人要求，将 AGENTS.md、MEMORY.md、README.md、memory/tasks.md、memory/log.jsonl 全部改为中文，并在 AGENTS.md 第5节明确规定始终使用中文。", "files_changed": ["AGENTS.md", "MEMORY.md", "README.md", "memory/tasks.md", "memory/log.jsonl"]}
+{"date": "2026-05-05", "session": "日志结构重构", "summary": "将 memory/log.jsonl 改为按日期分文件存储（memory/logs/YYYY-MM-DD.jsonl），最多保留30份文件，每月自动清理超出部分。更新 AGENTS.md 记录新规范。", "files_changed": ["AGENTS.md", "memory/tasks.md", "memory/logs/2026-05-05.jsonl"]}

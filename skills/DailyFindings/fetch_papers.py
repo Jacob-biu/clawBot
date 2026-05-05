@@ -120,9 +120,6 @@ def build_query() -> str:
         'ti:"multi-agent"', 'abs:"multi-agent"',
         'ti:"LLM agent"', 'abs:"LLM agent"',
         'ti:"AI agent"', 'abs:"AI agent"',
-        'ti:"agentic"', 'abs:"agentic"',
-        'ti:"autonomous agent"', 'abs:"autonomous agent"',
-        'ti:"tool use"', 'abs:"tool use"',
     ]
     kw_q = " OR ".join(kw_pairs)
     return f"({cat_q}) AND ({kw_q})"
@@ -327,9 +324,6 @@ def extract_keywords(paper: dict) -> list[str]:
         "llm agent":          "LLM Agent",
         "ai agent":           "AI Agent",
         "agentic":            "Agentic",
-        "autonomous agent":   "Autonomous Agent",
-        "tool use":           "Tool Use",
-        "tool-use":           "Tool Use",
         "reasoning":          "Reasoning",
         "planning":           "Planning",
         "reinforcement learning": "Reinforcement Learning",
@@ -338,8 +332,6 @@ def extract_keywords(paper: dict) -> list[str]:
         "benchmark":          "Benchmark",
         "evaluation":         "Evaluation",
         "code generation":    "Code Generation",
-        "safety":             "Safety",
-        "alignment":          "Alignment",
         "chain-of-thought":   "Chain-of-Thought",
         "fine-tuning":        "Fine-tuning",
         "simulation":         "Simulation",

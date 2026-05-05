@@ -24,12 +24,25 @@
 | 项目 | 状态 | 备注 |
 |------|------|------|
 | AI 工作空间初始化 | ✅ 已完成 | 已创建 AGENTS.md、MEMORY.md、memory/ 目录结构 |
+| 每日发现 skill | ✅ 已完成 | 见 skills/每日发现/，需部署到独立仓库「每日发现」 |
+
+## 已开发的 Skills
+
+| Skill 名称 | 路径 | 功能 | 状态 |
+|-----------|------|------|------|
+| 每日发现 | `skills/每日发现/` | 每天 UTC 00:00 拉取顶级 AI 机构的最新 Agent 论文，输出 Markdown 报告，并通过 GitHub Issue 通知所有者 | ✅ 开发完成，待部署 |
 
 ## 关键决策
 
 - `AGENTS.md` 是核心操作文件，其他记忆文件为辅助
 - 记忆目录使用 `tasks.md`（纯文本）+ `log.jsonl`（结构化日志）
 - 不引入重型工具——纯 Markdown 与 JSONL 是主要格式
+
+## Skills 部署说明
+
+- **每日发现**：代码在 `skills/每日发现/`，需在 GitHub 上新建仓库「每日发现」，将该目录下所有文件（含 `.github/workflows/daily_papers.yml`）推送上去并启用 Actions。
+  - 脚本仅使用 Python 标准库，零外部依赖
+  - 机构列表在 `fetch_papers.py` 的 `TOP_INSTITUTIONS` 中维护
 
 ## 备注
 

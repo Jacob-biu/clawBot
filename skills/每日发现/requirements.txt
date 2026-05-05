@@ -1,0 +1,6 @@
+# requirements.txt — 每日发现 skill 依赖
+# 脚本目前仅使用 Python 标准库（urllib, xml, datetime, pathlib, os, sys）
+# 此文件留空，供未来扩展使用
+
+# 若需要更强大的 HTTP 客户端，可解除下行注释：
+# requests>=2.31.0
